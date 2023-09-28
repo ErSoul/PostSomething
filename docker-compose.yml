@@ -1,0 +1,26 @@
+version: "0.1"
+services:
+  db:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      MARIADB_USER: admin
+      MARIADB_PASSWORD: 1234
+      MARIADB_ROOT_PASSWORD: 1234
+      MARIADB_DATABASE: posts-app
+    volumes:
+      - ./db-data:/var/lib/mysql
+    # Only if needed access from outside
+    ports:
+      - 3306:3306
+    networks:
+      posts-app:
+        ipv4_address: 10.10.0.3
+
+networks:
+  posts-app:
+    name: posts-app
+    driver: bridge # default
+    ipam:
+      config:
+        - subnet: 10.10.0.0/29

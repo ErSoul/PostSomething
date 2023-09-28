@@ -1,0 +1,9 @@
+[submodule "PostSomething-auth"]
+	path = PostSomething-auth
+	url = git@github.com:ErSoul/PostSomething-auth.git
+[submodule "postsomething-front"]
+	path = postsomething-front
+	url = git@github.com:ErSoul/postsomething-front.git
+[submodule "PostSomething-api"]
+	path = PostSomething-api
+	url = git@github.com:ErSoul/PostSomething-api.git

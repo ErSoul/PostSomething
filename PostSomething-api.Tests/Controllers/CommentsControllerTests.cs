@@ -1,14 +1,11 @@
-﻿using System.Net;
-using System.Security.Claims;
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
 using Moq;
-
 using PostSomething_api.Controllers;
 using PostSomething_api.Requests;
 using PostSomething_api.Services.Interface;
+using System.Net;
+using System.Security.Claims;
 
 namespace PostSomething_api.Tests.Controllers
 {
@@ -26,7 +23,7 @@ namespace PostSomething_api.Tests.Controllers
 
         [Theory]
         [MemberData(nameof(DummyCommentsSamePostID), parameters: 5)]
-        public async void GetCommentsShouldReturnSuccess(int postID, Models.Comment[] comments)
+        public async Task GetCommentsShouldReturnSuccess(int postID, Models.Comment[] comments)
         {
             _commentsServiceStub.Setup(cs => cs.GetCommentsFromPost(postID)).ReturnsAsync(comments);
 
@@ -43,7 +40,7 @@ namespace PostSomething_api.Tests.Controllers
         [InlineData(1234213)]
         [InlineData(431)]
         [InlineData(673)]
-        public async void GetCommentShouldReturnSuccess(int commentID)
+        public async Task GetCommentShouldReturnSuccess(int commentID)
         {
             var comment = new Fake.Comment().Generate();
             comment.Id = commentID;
@@ -63,7 +60,7 @@ namespace PostSomething_api.Tests.Controllers
         }
 
         [Fact]
-        public async void GetCommentShouldReturnNotFound()
+        public async Task GetCommentShouldReturnNotFound()
         {
             var commentID = random.Next();
             _commentsServiceStub.Setup(cs => cs.GetComment(commentID)).ReturnsAsync(It.IsAny<Models.Comment>());
@@ -81,7 +78,7 @@ namespace PostSomething_api.Tests.Controllers
         [InlineData(1234213)]
         [InlineData(454)]
         [InlineData(673)]
-        public async void CreateCommentShouldSuccess(int postID)
+        public async Task CreateCommentShouldSuccess(int postID)
         {
             var userMock = new Mock<ClaimsPrincipal>();
             userMock.Setup(u => u.FindFirst(It.IsAny<string>())).Returns(new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sid, new Bogus.Faker().Random.Guid().ToString()));
@@ -105,7 +102,7 @@ namespace PostSomething_api.Tests.Controllers
         }
 
         [Fact]
-        public async void DeleteShouldReturnNoContent()
+        public async Task DeleteShouldReturnNoContent()
         {
             var commentID = random.Next();
             _commentsServiceStub.Setup(cs => cs.Delete(commentID));

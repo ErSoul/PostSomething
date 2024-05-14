@@ -1,13 +1,10 @@
-﻿using System.Net;
-using System.Security.Claims;
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
 using Moq;
-
 using PostSomething_api.Controllers;
 using PostSomething_api.Repositories.Interface;
+using System.Net;
+using System.Security.Claims;
 
 namespace PostSomething_api.Tests.Controllers
 {
@@ -55,7 +52,7 @@ namespace PostSomething_api.Tests.Controllers
         [InlineData(1)]
         [InlineData(4452)]
         [InlineData(28592)]
-        public async void GetPostShouldReturnOnePost(int postID)
+        public async Task GetPostShouldReturnOnePost(int postID)
         {
             _postRepository.Setup(pr => pr.Find(p => p.Id == postID))
                 .ReturnsAsync(new Models.Post()
@@ -78,7 +75,7 @@ namespace PostSomething_api.Tests.Controllers
         [InlineData(1)]
         [InlineData(4452)]
         [InlineData(28592)]
-        public async void GetPostShouldReturnNotFound(int postID)
+        public async Task GetPostShouldReturnNotFound(int postID)
         {
             _postRepository.Setup(pr => pr.Find(p => p.Id == postID))
                 .ReturnsAsync(It.IsAny<Models.Post>());
@@ -91,7 +88,7 @@ namespace PostSomething_api.Tests.Controllers
         }
 
         [Fact]
-        public async void CreatePostSuccess()
+        public async Task CreatePostSuccess()
         {
             var userMock = new Mock<ClaimsPrincipal>();
             userMock.Setup(u => u.FindFirst(It.IsAny<string>())).Returns(It.IsAny<Claim>());
@@ -117,7 +114,7 @@ namespace PostSomething_api.Tests.Controllers
         [InlineData(1)]
         [InlineData(204349)]
         [InlineData(604396429)]
-        public async void DeletePostShouldReturnNoContent(int postID)
+        public async Task DeletePostShouldReturnNoContent(int postID)
         {
             var postEntity = new Models.Post { Id = postID, Title = "Dummy Title", Description = "Dummy description", Author = new Models.ApiUser { Id = Guid.NewGuid().ToString(), Email = "xyz@xyz.org" } };
             _postRepository.Setup(pr => pr.Find(p => p.Id == postID)).ReturnsAsync(postEntity);
@@ -135,7 +132,7 @@ namespace PostSomething_api.Tests.Controllers
         [InlineData(1)]
         [InlineData(204349)]
         [InlineData(604396429)]
-        public async void DeletePostShouldReturnNotFound(int postID)
+        public async Task DeletePostShouldReturnNotFound(int postID)
         {
             _postRepository.Setup(pr => pr.Find(p => p.Id == postID)).ReturnsAsync(It.IsAny<Models.Post>());
 

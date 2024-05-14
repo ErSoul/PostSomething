@@ -1,23 +1,17 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-
-using Bogus;
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
-
 using Moq;
-
 using NuGet.Protocol;
-
 using PostSomething_api.Controllers;
 using PostSomething_api.Models;
 using PostSomething_api.Requests;
 using PostSomething_api.Services.Interface;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace PostSomething_api.Tests.Controllers
 {
@@ -36,7 +30,7 @@ namespace PostSomething_api.Tests.Controllers
             _config = new ConfigurationBuilder().
                 AddInMemoryCollection(
                 new Dictionary<string, string?> {
-                    {"Jwt:Key", "SomethingWithMinimumCharacters"},
+                    {"Jwt:Key", "SomethingWithMinimumCharactersTest"},
                     {"Jwt:Issuer", "test"},
                     {"Jwt:Audience", "noOne"}
                 }).Build();
@@ -56,7 +50,7 @@ namespace PostSomething_api.Tests.Controllers
         }
 
         [Fact(DisplayName = "User should be able to register")]
-        public async void RegisterShouldReturnOk()
+        public async Task RegisterShouldReturnOk()
         {
             var userToRegister = new RegisterUserBody { Email = "test@example.org", Password = "P@ssw0rd", ConfirmationPassword = "P@ssw0rd", UserName = "Test" };
             var faker = new Bogus.Faker();
@@ -77,7 +71,7 @@ namespace PostSomething_api.Tests.Controllers
 
 
         [Fact(DisplayName = "User should fail to register")]
-        public async void RegisterShouldReturn422()
+        public async Task RegisterShouldReturn422()
         {
             var userToRegister = new RegisterUserBody { Email = "test@example.org", Password = "password", ConfirmationPassword = "password", UserName = "Test" };
             var error = new IdentityError[] { new() { Code = "01", Description = "Something Failed" } };
@@ -96,7 +90,7 @@ namespace PostSomething_api.Tests.Controllers
         }
 
         [Fact]
-        public async void RegisterShouldReturnBadRequestWhenConfirmationPasswordDiffer()
+        public async Task RegisterShouldReturnBadRequestWhenConfirmationPasswordDiffer()
         {
             var userToRegister = new RegisterUserBody { Email = "test@example.org", Password = "P@ssw0rd", ConfirmationPassword = "P@ssw0rdDiffer", UserName = "Test" };
 
@@ -108,7 +102,7 @@ namespace PostSomething_api.Tests.Controllers
         }
 
         [Fact(DisplayName = "Confirming email should return error due to missing parameters")]
-        public async void ConfirmEmailShouldReturn422DueToMissingValues()
+        public async Task ConfirmEmailShouldReturn422DueToMissingValues()
         {
             var result = await _authController.ConfirmAccount("ajsdklf;ajfkl", It.IsAny<string>());
 
@@ -116,7 +110,7 @@ namespace PostSomething_api.Tests.Controllers
         }
 
         [Fact(DisplayName = "Confirming email should return error due to user not found")]
-        public async void ConfirmEmailShouldReturnUserNotFound()
+        public async Task ConfirmEmailShouldReturnUserNotFound()
         {
             var result = await _authController.ConfirmAccount("ajsdklf;ajfkl", "aasdsklafdjdlfa");
 
@@ -124,7 +118,7 @@ namespace PostSomething_api.Tests.Controllers
         }
 
         [Fact(DisplayName = "Confirming email should return bad request")]
-        public async void ConfirmEmailShouldReturnBadRequest()
+        public async Task ConfirmEmailShouldReturnBadRequest()
         {
             var userId = "ajsdklf;ajfkl";
             var userToken = "aasdsklafdjdlfa";
@@ -142,7 +136,7 @@ namespace PostSomething_api.Tests.Controllers
         }
 
         [Fact(DisplayName = "Confirming email should return ok")]
-        public async void ConfirmEmailShouldReturnOk()
+        public async Task ConfirmEmailShouldReturnOk()
         {
             var userId = "ajsdklf;ajfkl";
             var userToken = "aasdsklafdjdlfa";
@@ -160,7 +154,7 @@ namespace PostSomething_api.Tests.Controllers
         }
 
         [Fact(DisplayName = "Login Endpoint should return a JWT Token.")]
-        public async void LoginShouldReturnOk()
+        public async Task LoginShouldReturnOk()
         {
             var loginRequest = new LoginRequest { Email = "something@xyz.com", Password = "password" };
             var apiUser = new ApiUser { Email = loginRequest.Email, UserName = "Test", PasswordHash = "abcdefgh", EmailConfirmed = true, Address = "somewhere" };
@@ -175,7 +169,7 @@ namespace PostSomething_api.Tests.Controllers
         }
 
         [Fact(DisplayName = "Login Endpoint should return Unauthorized due to wrong credentials.")]
-        public async void LoginShouldReturnUnauthorized()
+        public async Task LoginShouldReturnUnauthorized()
         {
             var loginRequest = new LoginRequest { Email = "something@xyz.com", Password = "password" };
             var apiUser = new ApiUser { Email = loginRequest.Email, UserName = "Test", PasswordHash = "abcdefgh", EmailConfirmed = true };
@@ -191,7 +185,7 @@ namespace PostSomething_api.Tests.Controllers
         }
 
         [Fact(DisplayName = "Login Endpoint should return Unauthorized due to user not confirmed.")]
-        public async void LoginShouldReturnForbidConfirm()
+        public async Task LoginShouldReturnForbidConfirm()
         {
             var loginRequest = new LoginRequest { Email = "something@xyz.com", Password = "password" };
             var apiUser = new ApiUser { Email = loginRequest.Email, UserName = "Test", PasswordHash = "abcdefgh", EmailConfirmed = false };
@@ -209,7 +203,7 @@ namespace PostSomething_api.Tests.Controllers
         }
 
         [Fact(DisplayName = "Profile should return the current user information.")]
-        public async void ProfileShouldReturnUserInfo()
+        public async Task ProfileShouldReturnUserInfo()
         {
             var currentUserEmail = "testing@example.org";
             var returnedUser = new Fake.ApiUser().Generate();

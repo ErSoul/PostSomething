@@ -1,13 +1,10 @@
-﻿using System.Linq.Expressions;
-
-using Microsoft.AspNetCore.Http;
-
+﻿using Microsoft.AspNetCore.Http;
 using Moq;
-
 using PostSomething_api.Repositories.Interface;
 using PostSomething_api.Requests;
 using PostSomething_api.Services.Implementation;
 using PostSomething_api.Services.Interface;
+using System.Linq.Expressions;
 
 namespace PostSomething_api.Tests.Services
 {
@@ -29,7 +26,7 @@ namespace PostSomething_api.Tests.Services
         }
 
         [Fact]
-        public async void GetCommentsFromPostShouldReturnSuccess()
+        public async Task GetCommentsFromPostShouldReturnSuccess()
         {
             int postID = random.Next();
             var commentsReturned = new Fake.Comment(postID).Generate(random.Next(MAX_COMMENTS));
@@ -43,7 +40,7 @@ namespace PostSomething_api.Tests.Services
         }
 
         [Fact]
-        public async void GetCommentShouldReturnSuccess()
+        public async Task GetCommentShouldReturnSuccess()
         {
             var comment = new Fake.Comment().Generate();
 
@@ -56,7 +53,7 @@ namespace PostSomething_api.Tests.Services
         }
 
         [Fact]
-        public async void CreateCommentFromPostShouldReturnSuccess()
+        public async Task CreateCommentFromPostShouldReturnSuccess()
         {
             var dummyPost = new Fake.Post(random.Next()).Generate();
             var dummyUser = new Fake.ApiUser().Generate();
@@ -83,7 +80,7 @@ namespace PostSomething_api.Tests.Services
         }
 
         [Fact(DisplayName = "Create comment from post should return argument null exception, because post could not be found")]
-        public async void CreateCommentFromPostShouldReturnArgumentNullException()
+        public async Task CreateCommentFromPostShouldReturnArgumentNullException()
         {
             var dummyPost = new Fake.Post(random.Next()).Generate();
             var dummyUser = new Fake.ApiUser().Generate();
@@ -107,7 +104,7 @@ namespace PostSomething_api.Tests.Services
         }
 
         [Fact(DisplayName = "Create comment from post should return bad request exception, because parent comment must belong to the same post as child.")]
-        public async void CreateCommentFromPostShouldReturnBadRequest()
+        public async Task CreateCommentFromPostShouldReturnBadRequest()
         {
             var dummyPost = new Fake.Post(random.Next()).Generate();
             var dummyUser = new Fake.ApiUser().Generate();
@@ -133,7 +130,7 @@ namespace PostSomething_api.Tests.Services
         [Theory]
         [InlineData(129)]
         [InlineData(51553)]
-        public async void DeleteShouldSuccess(int commentID)
+        public async Task DeleteShouldSuccess(int commentID)
         {
             var comment = new Fake.Comment().Generate();
             comment.Id = commentID;
@@ -147,7 +144,7 @@ namespace PostSomething_api.Tests.Services
         }
 
         [Fact]
-        public async void DeleteShouldThrowArgumentNullException()
+        public async Task DeleteShouldThrowArgumentNullException()
         {
             var comment = new Fake.Comment().Generate();
 
